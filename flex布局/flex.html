@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style>
+	*{
+		margin: 0px;
+		padding: 0px;
+		list-style: none;
+	}
+	.box{
+		width: 500px;
+		height: 500px;
+		margin: 100px auto;
+		background-color: red;
+		display: flex;
+		/*justify-content: space-around;*/ /*水平居中*/
+		align-items: center;	/*垂直居中*/
+		flex-wrap: wrap;	/*内容溢出换行*/
+	}	
+	.box>div{
+		width: 25%;
+		height: 60px;
+		text-align: center;
+		line-height: 60px;
+		color: #fff;
+		border: 1px solid #000;
+		background-color: blue;
+
+	}
+</style>
+<body>
+	<div class="box">
+		<div>1</div>
+		<div>2</div>
+		<div>2</div>
+		<div>2</div>
+		<div>2</div>
+		<div>2</div>
+		<div>2</div>
+		<div>2</div>
+	</div>
+</body>
+</html>
