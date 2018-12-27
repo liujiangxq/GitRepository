@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>开始使用layui</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<body class="">
+
+
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">
+            报表查询
+            <!--<img width="60" src="img/logo2.png" alt="">-->
+        </div>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                    emmm
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-container">
+        <div class="" style=" background-color: #F2F2F2;">
+            <div class="layui-card-header">筛选条件</div>
+            <div class="layui-card-body">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">用户名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="userNo"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-inline">
+                                <select id="type">
+                                    <option value="">请选择状态</option>
+                                        <option value="0">成功</option>
+                                        <option value="1">失败</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">验证日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="date" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div style="text-align: center">
+                    <button id="search" class="layui-btn">查询</button>
+                </div>
+            </div>
+        </div>
+        <table id="tab1">
+
+        </table>
+
+    </div>
+</div>
+<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['table','form','laydate'], function(){
+        var table = layui.table,
+            form = layui.form,
+            laydate = layui.laydate;
+        laydate.render({
+           elem:"#date"
+        });
+        table.render({
+            elem:"#tab1",
+            url:"/publishRecord",
+            //where:{"username":"liu"},
+            method:"get",
+            toolbar:true,
+            cols:[[
+                {checkbox:true}
+                ,{field:'userNo',  title: 'userID', sort: true}
+                ,{field:'goodsNo',  title: 'goodsID',templet:function (d) {
+                    console.log(d)
+                        return  '<a href="" style="color: #01AAED;text-decoration: underline;">'+ d.goodsNo +'</a>'
+                    }}
+                ,{field:'statusCode',  title: '状态', sort: true,templet:function (res) {
+                    var code = res.statusCode;
+                    if(code==1){
+                        return "<font color='red'>失败</font>"
+                    }else {
+                        return "成功";
+                    }
+                }}
+                ,{field:'codeMsg',  title: '信息'}
+                ,{field:'recordTime', title: '日期', minWidth: 150,templet:function(res){
+                    console.log(res.recordTime)
+                        var date = new Date(res.recordTime);
+                    //date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+                    return dateToString(res.recordTime);
+                    }}
+            ]],
+            id:"tabReload"
+            ,page: {//支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                ,curr: 1 //设定初始在第 5 页
+                ,groups: 1 //只显示 1 个连续页码
+                ,first: false //不显示首页
+                ,last: false //不显示尾页
+            }
+        });
+        //点击搜索重新加载表格
+        $("#search").click(function () {
+            var username = $("#userNo").val();
+            var type = $("#type").val();
+            table.reload('tabReload',{
+                page:{  //从第一页重新加载
+                    curr:1
+                },
+                where:{ //搜索条件  ->传给后台的参数
+                    "username":username,
+                    "type":type
+                }
+            })
+        });
+        //格式化日期
+        function dateToString(v){
+            var date = new Date(v);
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            m = m<10?'0'+m:m;
+            var d = date.getDate();
+            d = d<10?("0"+d):d;
+            var h = date.getHours();
+            h = h<10?("0"+h):h;
+            var M = date.getMinutes();
+            M = M<10?("0"+M):M;
+            var s = date.getSeconds();
+            s = s<10?("0"+s):s;
+            var str = y+"-"+m+"-"+d+" "+h+":"+M+":"+s;
+            return str;
+        }
+
+
+
+    });
+</script>
+</body>
+</html>

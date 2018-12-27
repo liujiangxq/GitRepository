@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.springbootmybatis.dao.GoodsDao">
+    <!--<select id="queryGoodsById" parameterType="java.lang.String" resultType="HashMap">
+        select  top 10 * from  Goods where
+         Goods_no like '%'+#{goodsId}+'%'
+    </select>-->
+    <select id="queryGoodsById" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+       select top 1 * from Goods where UnitPrice  &gt;  #{goodsId}
+    </select>
+    <select id="queryPublishRecord" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT * FROM(
+        SELECT TOP ${top} ROW_NUMBER() OVER(ORDER BY recordTime ASC) AS ROWID,*
+        FROM publishRecords
+        <where>
+            <if test="type !=null and type !=''">
+                and statusCode = #{type}
+            </if>
+            <if test="username !=null and username !='' ">
+                and userNo = #{username}
+            </if>
+        </where>
+        ) AS TEMP1
+        where
+        ROWID>#{rowNum}
+
+
+    </select>
+    <select id="queryPublishRecordCount" resultType="int">
+        select count(1) from publishRecords
+        <where>
+            <if test="type !=null and type !=''">
+                and statusCode = #{type}
+            </if>
+            <if test="username !=null and username !='' ">
+                and userNo = #{username}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://192.168.6.202:9999;databaseName=test
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: doright
+    password: doright001
+    initial-size: 1
+    min-idle: 1
+    max-active: 20
+    test-on-borrow: true
+    max-wait: 60000
+    time-between-eviction-runs-millis: 60000
+    min-evictable-idle-time-millis: 300000
+    validation-query: SELECT 1 FROM DUAL
+    test-While-Idle: true
+    test-on-return: false
+    pool-prepared-statements: false
+    max-pool-prepared-statement-per-connection-size: 20
+    filters: stat,wall,log4j,config
+    type: com.alibaba.druid.pool.DruidDataSource
+server:
+   #配置内部tomcat端口号
+  port: 9000
+mybatis:
+  typeAliasesPackage: com.example.springbootmybatis.entity
+  mapperLocations: classpath:mapper/*.xml
+  # 打印sql
+logging:
+  level:
+     com.example.springbootmybatis.dao : debug
